@@ -5,12 +5,14 @@ var find = require('lodash.find')
 var io
 exports.init = function (_io, secret) {
   io = _io
+
   io.use(socketJwt.authorize({
     secret: secret,
     handshake: true
   }))
 
   io.on('connection', function (socket) {
+    socket.setMaxListeners(Number.MAX_VALUE)
     socket.userId = socket.decoded_token.id
     socket.sessionId = socket.handshake.query.sessionId
 
